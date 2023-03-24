@@ -9,3 +9,5 @@ export const parseBody = async (req) => {
 
   return data
 }
+
+export default parseBody

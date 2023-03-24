@@ -1,6 +1,6 @@
 import { createServer } from 'http'
-import { connect } from 'mongoose'
 import { todoRouter } from './routes/todo-router.js'
+import connectToMongo from './connect.js'
 
 import { config } from 'dotenv'
 
@@ -9,16 +9,7 @@ config()
 const port = process.env.PORT
 const connectionString = process.env.DATABASE_CONNECTION_STRING
 
-connect(connectionString, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log('✅ Successfully connected to MongoDB Atlas')
-  })
-  .catch((error) => {
-    console.error('❌ Failed to connect to MongoDB Atlas:', error)
-  })
+connectToMongo(connectionString)
 
 const server = createServer()
 
