@@ -1,56 +1,27 @@
-import { Todo } from '../models/todo.js'
-import { parseBody } from '../helpers/parse-body.js'
+import TodoController from '../controllers/todo-controller.js'
 
 export async function todoRouter(req, res) {
   const { url, method } = req
 
   try {
     if (url === '/todos' && method === 'GET') {
-      const todos = await Todo.find({})
+      return await TodoController.getAllTodos(req, res)
+    }
 
-      const data = {
-        items: todos,
-        total: todos.length,
-        active: todos.filter((t) => !t.completed).length,
-        completed: todos.filter((t) => t.completed).length,
-      }
+    if (url === '/todos' && method === 'POST') {
+      return await TodoController.createTodo(req, res)
+    }
 
-      res.setHeader('Content-type', 'application/json')
+    if (url.startsWith('/todos/') && method === 'PUT') {
+      return await TodoController.updateTodo(req, res)
+    }
 
-      res.end(JSON.stringify(data))
-    } else if (url === '/todos' && method === 'POST') {
-      const body = await parseBody(req)
+    if (url.startsWith('/todos/') && method === 'DELETE') {
+      return await TodoController.deleteTodo(req, res)
+    }
 
-      const createdTodo = await Todo.create(JSON.parse(body))
-
-      res.setHeader('Content-type', 'application/json')
-
-      res.end(JSON.stringify(createdTodo))
-    } else if (url.startsWith('/todos/') && method === 'PUT') {
-      const id = url.slice('/todos/'.length)
-      const body = await parseBody(req)
-
-      const updatedTodo = await Todo.findByIdAndUpdate(id, JSON.parse(body), {
-        new: true,
-      })
-
-      res.setHeader('Content-type', 'application/json')
-
-      res.end(JSON.stringify(updatedTodo))
-    } else if (url === '/todos/clearCompleted' && method === 'POST') {
-      await Todo.deleteMany({ completed: true })
-      const todos = await Todo.find({})
-
-      res.setHeader('Content-type', 'application/json')
-
-      res.end(JSON.stringify(todos))
-    } else if (url.startsWith('/todos/') && method === 'DELETE') {
-      const id = url.slice('/todos/'.length)
-      const deletedTodo = await Todo.findByIdAndDelete(id)
-
-      res.setHeader('Content-type', 'application/json')
-
-      res.end(JSON.stringify(deletedTodo))
+    if (url === '/todos/clearCompleted' && method === 'POST') {
+      return await TodoController.clearCompletedTodos(req, res)
     }
   } catch (err) {
     console.error(err)
