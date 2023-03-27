@@ -1,3 +1,4 @@
+import Router from 'koa-router'
 import {
   find,
   create,
@@ -6,30 +7,16 @@ import {
   clearCompleted,
 } from '../controllers/todos'
 
-export async function todoRouter(req, res) {
-  const { url, method } = req
+const router = new Router()
 
-  try {
-    if (url === '/todos' && method === 'GET') {
-      return await find(req, res)
-    }
+router.get('/todos', find)
 
-    if (url === '/todos' && method === 'POST') {
-      return await create(req, res)
-    }
+router.post('/todos', create)
 
-    if (url.startsWith('/todos/') && method === 'PUT') {
-      return await update(req, res)
-    }
+router.put('/todos/:id', update)
 
-    if (url.startsWith('/todos/') && method === 'DELETE') {
-      return await deleteTodo(req, res)
-    }
+router.delete('/todos/clear-completed', clearCompleted)
 
-    if (url === '/todos/clearCompleted' && method === 'POST') {
-      return await clearCompleted(req, res)
-    }
-  } catch (err) {
-    console.error(err)
-  }
-}
+router.delete('/todos/:id', deleteTodo)
+
+export default router

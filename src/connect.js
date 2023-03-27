@@ -1,6 +1,8 @@
 import { connect } from 'mongoose'
 
-const connectToMongo = async (connectionString) => {
+const connectToMongo = async () => {
+  const connectionString = process.env.DATABASE_CONNECTION_STRING
+
   try {
     await connect(connectionString, {
       useNewUrlParser: true,

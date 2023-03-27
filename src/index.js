@@ -1,32 +1,30 @@
-import { createServer } from 'http'
-import { todoRouter } from './routes/todo-router.js'
+import koa from 'koa'
+import bodyParser from 'koa-bodyparser'
+import helmet from 'koa-helmet'
+import logger from 'koa-logger'
+import cors from 'koa-cors'
+
+import todoRouter from './routes/todo-router.js'
 import connectToMongo from './connect.js'
 
 import { config } from 'dotenv'
 
 config()
 
-const port = process.env.PORT
-const connectionString = process.env.DATABASE_CONNECTION_STRING
+connectToMongo()
 
-connectToMongo(connectionString)
+const app = new koa()
 
-const server = createServer()
+app.use(logger())
+app.use(bodyParser())
+app.use(helmet())
+app.use(cors())
 
-server.on('request', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Request-Method', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, DELETE')
-  res.setHeader('Access-Control-Allow-Headers', '*')
-  if (req.method === 'OPTIONS') {
-    res.writeHead(200)
-    res.end()
-    return
-  }
+app.use(todoRouter.routes())
+app.use(todoRouter.allowedMethods())
 
-  todoRouter(req, res)
-})
+const port = process.env.PORT || 8000
 
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
 })

@@ -1,12 +1,12 @@
 import { Todo } from '../../entities/todo.js'
 
-const deleteTodo = async (req, res) => {
+const deleteTodo = async (ctx) => {
   try {
-    const id = req.url.slice('/todos/'.length)
+    const id = ctx.params.id // assumes id is passed as a URL parameter
     const deletedTodo = await Todo.findByIdAndDelete(id)
 
-    res.setHeader('Content-type', 'application/json')
-    res.end(JSON.stringify(deletedTodo))
+    ctx.type = 'application/json'
+    ctx.body = deletedTodo
   } catch (error) {
     console.log(`Could not delete todo: ${error}`)
   }
