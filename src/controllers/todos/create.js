@@ -4,10 +4,10 @@ const create = async (ctx) => {
   try {
     const createdTodo = await Todo.create(ctx.request.body)
 
-    ctx.type = 'application/json'
+    ctx.status = 201
     ctx.body = createdTodo
   } catch (error) {
-    console.log(`Could not create todo: ${error}`)
+    ctx.throw(error)
   }
 }
 

@@ -6,6 +6,7 @@ import cors from 'koa-cors'
 
 import todoRouter from './routes/todo-router.js'
 import connectToMongo from './connect.js'
+import { errorHandler } from './middlewares/error-handling.js'
 
 import { config } from 'dotenv'
 
@@ -24,6 +25,8 @@ app.use(todoRouter.routes())
 app.use(todoRouter.allowedMethods())
 
 const port = process.env.PORT || 8000
+
+app.on('error', errorHandler)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`)

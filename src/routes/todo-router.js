@@ -6,8 +6,11 @@ import {
   deleteTodo,
   clearCompleted,
 } from '../controllers/todos'
+import setJsonContentType from '../middlewares/content-type'
 
 const router = new Router()
+
+router.use(setJsonContentType)
 
 router.get('/todos', find)
 

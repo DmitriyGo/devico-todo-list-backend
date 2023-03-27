@@ -15,10 +15,9 @@ const find = async (ctx) => {
       completed,
     }
 
-    ctx.type = 'application/json'
     ctx.body = data
   } catch (error) {
-    console.log(`Could not get todos: ${error}`)
+    ctx.throw(error)
   }
 }
 
