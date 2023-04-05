@@ -2,21 +2,27 @@ import { Todo } from '../../entities/todo.js'
 
 const deleteTodo = async (ctx) => {
   try {
-    const id = ctx.params.id
+    let ids = ctx.request.body.ids
 
-    if (id.length !== 24) {
+    if (!Array.isArray(ids)) {
+      ids = [ids]
+    }
+
+    if (ids.some((id) => id.length !== 24)) {
       ctx.throw(400, 'Wrong id format')
     }
 
-    const foundTodo = await Todo.findById(id)
+    const foundTodos = await Promise.all(ids.map((id) => Todo.findById(id)))
 
-    if (!foundTodo) {
+    if (foundTodos.some((todo) => !todo)) {
       ctx.throw(404, 'Todo not found')
     }
 
-    const deletedTodo = await foundTodo.deleteOne()
+    const deletedTodos = await Promise.all(
+      foundTodos.map((todo) => todo.deleteOne()),
+    )
 
-    ctx.body = deletedTodo
+    ctx.body = deletedTodos
   } catch (error) {
     ctx.throw(error)
   }
