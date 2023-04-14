@@ -3,9 +3,11 @@ import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import logger from 'koa-logger'
 import cors from 'koa-cors'
+import { default as Cookies } from 'koa-cookie'
 
 import todoRouter from './routes/todo-router.js'
-import connectToMongo from './connect.js'
+import authRouter from './routes/auth-router.js'
+import connectToMongo from './helpers/connect.js'
 import { errorHandler } from './middlewares/error-handling.js'
 
 import { config } from 'dotenv'
@@ -16,13 +18,22 @@ connectToMongo()
 
 const app = new koa()
 
+app.use(Cookies())
 app.use(logger())
 app.use(bodyParser())
 app.use(helmet())
-app.use(cors())
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.PUBLIC_CLIENT_URL,
+  }),
+)
 
 app.use(todoRouter.routes())
 app.use(todoRouter.allowedMethods())
+
+app.use(authRouter.routes())
+app.use(authRouter.allowedMethods())
 
 const port = process.env.PORT || 8000
 

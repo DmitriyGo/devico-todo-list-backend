@@ -1,18 +1,20 @@
+import ApiError from '../exceptions/ApiError'
+
 export const errorHandler = async (err, ctx) => {
-  if (err.status === 404) {
-    ctx.status = 404
+  if (err instanceof ApiError) {
+    ctx.status = err.status
     ctx.body = {
-      message: 'Todo not found',
-    }
-  } else if (err.status === 401) {
-    ctx.status = 401
-    ctx.body = {
-      message: 'Unauthorized request',
+      error: {
+        message: err.message,
+        errors: err.errors,
+      },
     }
   } else {
-    ctx.status = err.statusCode || err.status || 500
+    ctx.status = 500
     ctx.body = {
-      message: err.message,
+      error: {
+        message: 'Internal Server Error',
+      },
     }
   }
 }
