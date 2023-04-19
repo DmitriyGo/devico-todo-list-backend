@@ -28,7 +28,6 @@
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.4.0",
-    "koa-cookie": "^1.0.0",
     "koa-cors": "^0.0.16",
     "koa-helmet": "^7.0.1",
     "koa-logger": "^3.2.1",

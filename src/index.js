@@ -3,7 +3,6 @@ import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import logger from 'koa-logger'
 import cors from 'koa-cors'
-import { default as Cookies } from 'koa-cookie'
 
 import todoRouter from './routes/todo-router.js'
 import authRouter from './routes/auth-router.js'
@@ -18,7 +17,6 @@ connectToMongo()
 
 const app = new koa()
 
-app.use(Cookies())
 app.use(logger())
 app.use(bodyParser())
 app.use(helmet())

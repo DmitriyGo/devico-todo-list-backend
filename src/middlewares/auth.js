@@ -14,8 +14,10 @@ const authMiddleware = async (ctx, next) => {
     }
 
     const userData = validateAccessToken(accessToken)
+
     if (!userData) {
-      throw ApiError.UnauthorizedError()
+      ctx.status = 401
+      return
     }
 
     ctx.state.user = userData

@@ -23,10 +23,9 @@ const register = async (ctx) => {
 
     ctx.cookies.set('refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
     })
 
-    ctx.body = userData
+    ctx.body = new UserResponseDto(userData)
   } catch (error) {
     if (error.name === 'ValidationError') {
       const validationErrors = error.errors.map((err) => err.replace(/"/g, ''))
