@@ -1,6 +1,7 @@
 import registerService from '../../services/auth/register'
 import * as yup from 'yup'
 import ApiError from '../../exceptions/ApiError'
+import UserResponseDto from '../../dtos/UserResponseDto'
 
 const registerSchema = yup.object().shape({
   login: yup.string().required(),

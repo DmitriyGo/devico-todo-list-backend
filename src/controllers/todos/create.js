@@ -1,12 +1,8 @@
 import { Todo } from '../../entities/todo.js'
-import validateAccessToken from '../../services/token/validateAccessToken'
 
 const create = async (ctx) => {
   try {
-    const accessToken = ctx.request.headers.authorization.split(' ')[1]
-
-    const decodedToken = validateAccessToken(accessToken)
-    const userId = decodedToken.id
+    const userId = ctx.state.user.id
 
     const todoData = {
       ...ctx.request.body,

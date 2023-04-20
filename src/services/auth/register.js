@@ -19,6 +19,7 @@ const register = async (login, password) => {
   const user = await User.create({ login, password: hashPassword })
 
   const userDto = new UserDto(user)
+
   const tokens = generateTokens({ ...userDto })
 
   await saveToken(userDto.id, tokens.refreshToken)

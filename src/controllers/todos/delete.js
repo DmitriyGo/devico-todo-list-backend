@@ -2,6 +2,7 @@ import { Todo } from '../../entities/todo.js'
 
 const deleteTodo = async (ctx) => {
   try {
+    const userId = ctx.state.user.id
     let ids = ctx.request.body.ids
 
     if (!Array.isArray(ids)) {
@@ -12,14 +13,8 @@ const deleteTodo = async (ctx) => {
       ctx.throw(400, 'Wrong id format')
     }
 
-    const foundTodos = await Promise.all(ids.map((id) => Todo.findById(id)))
-
-    if (foundTodos.some((todo) => !todo)) {
-      ctx.throw(404, 'Todo not found')
-    }
-
     const deletedTodos = await Promise.all(
-      foundTodos.map((todo) => todo.deleteOne()),
+      ids.map((id) => Todo.findOneAndDelete({ _id: id, user: userId })),
     )
 
     ctx.body = deletedTodos

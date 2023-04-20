@@ -3,7 +3,7 @@ import * as yup from 'yup'
 import ApiError from '../../exceptions/ApiError'
 import UserResponseDto from '../../dtos/UserResponseDto'
 
-const registerSchema = yup.object().shape({
+const loginSchema = yup.object().shape({
   login: yup.string().required(),
   password: yup
     .string()
@@ -11,14 +11,11 @@ const registerSchema = yup.object().shape({
     .required(),
 })
 
-const register = async (ctx) => {
+const login = async (ctx) => {
   try {
-    const { login, password } = await registerSchema.validate(
-      ctx.request.body,
-      {
-        abortEarly: false,
-      },
-    )
+    const { login, password } = await loginSchema.validate(ctx.request.body, {
+      abortEarly: false,
+    })
 
     const userData = await loginService(login, password)
 
@@ -37,4 +34,4 @@ const register = async (ctx) => {
   }
 }
 
-export default register
+export default login

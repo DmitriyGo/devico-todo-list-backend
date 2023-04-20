@@ -22,9 +22,12 @@ const find = async (page, pageSize, sorting, userId) => {
       .skip(skip)
       .limit(limit)
 
-    const total = await Todo.countDocuments()
-    const active = await Todo.countDocuments({ completed: false })
-    const completed = await Todo.countDocuments({ completed: true })
+    const total = await Todo.countDocuments({ user: userId })
+    const active = await Todo.countDocuments({ user: userId, completed: false })
+    const completed = await Todo.countDocuments({
+      user: userId,
+      completed: true,
+    })
 
     const totalPages = Math.ceil(total / pageSize)
 
