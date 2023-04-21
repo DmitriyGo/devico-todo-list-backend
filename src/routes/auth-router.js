@@ -1,5 +1,11 @@
 import Router from 'koa-router'
-import { register, login, logout, refresh } from '../controllers/auth'
+import {
+  register,
+  login,
+  logout,
+  refresh,
+  checkLogin,
+} from '../controllers/auth'
 import setJsonContentType from '../middlewares/content-type'
 
 const router = new Router()
@@ -15,5 +21,7 @@ router.post('/login', login)
 router.post('/logout', logout)
 
 router.post('/refresh', refresh)
+
+router.post('/check-login', checkLogin)
 
 export default router
