@@ -1,5 +1,6 @@
+import { config } from 'dotenv'
 import setupApp from './app'
 
-require('dotenv').config()
+config()
 
 setupApp(process.env.PORT || 8000)

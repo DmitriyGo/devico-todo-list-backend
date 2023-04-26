@@ -13,9 +13,7 @@ const router = new Router()
 
 router.prefix('/todos')
 
-router.use(authMiddleware)
-
-router.use(setJsonContentType)
+router.use(authMiddleware, setJsonContentType)
 
 router.post('/', find)
 
@@ -23,8 +21,8 @@ router.post('/create', create)
 
 router.put('/:id', update)
 
-router.delete('/clear-completed', clearCompleted)
-
 router.post('/delete', deleteTodo)
+
+router.delete('/clear-completed', clearCompleted)
 
 export default router

@@ -11,6 +11,8 @@ const create = async (ctx) => {
 
     const createdTodo = await Todo.create(todoData)
 
+    ctx.io.emit('listUpdated')
+
     ctx.status = 201
     ctx.body = createdTodo
   } catch (error) {

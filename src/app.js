@@ -3,6 +3,8 @@ import bodyParser from 'koa-bodyparser'
 import helmet from 'koa-helmet'
 import logger from 'koa-logger'
 import cors from 'koa-cors'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 
 import todoRouter from './routes/todo-router.js'
 import authRouter from './routes/auth-router.js'
@@ -11,6 +13,12 @@ import { errorHandler } from './middlewares/error-handling.js'
 
 const setupApp = (port) => {
   const app = new koa()
+  const httpServer = createServer(app.callback())
+  const io = new Server(httpServer, {
+    cors: {
+      origin: process.env.PUBLIC_CLIENT_URL,
+    },
+  })
 
   connectToMongo()
 
@@ -24,6 +32,11 @@ const setupApp = (port) => {
     }),
   )
 
+  app.use((ctx, next) => {
+    ctx.io = io
+    return next()
+  })
+
   app.use(todoRouter.routes())
   app.use(todoRouter.allowedMethods())
 
@@ -32,7 +45,7 @@ const setupApp = (port) => {
 
   app.on('error', errorHandler)
 
-  app.listen(port, () => {
+  httpServer.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
   })
 }

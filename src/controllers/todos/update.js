@@ -3,6 +3,7 @@ import { Todo } from '../../entities/todo.js'
 const update = async (ctx) => {
   try {
     const id = ctx.params.id
+    const userId = ctx.state.user.id
 
     if (id.length !== 24) {
       ctx.throw(400, 'Wrong id format')
@@ -19,9 +20,12 @@ const update = async (ctx) => {
 
     const updatedTodo = await foundTodo.save()
 
-    const total = await Todo.countDocuments()
-    const active = await Todo.countDocuments({ completed: false })
-    const completed = await Todo.countDocuments({ completed: true })
+    const total = await Todo.countDocuments({ user: userId })
+    const active = await Todo.countDocuments({ user: userId, completed: false })
+    const completed = await Todo.countDocuments({
+      user: userId,
+      completed: true,
+    })
 
     const data = {
       item: updatedTodo,
@@ -29,6 +33,8 @@ const update = async (ctx) => {
       active,
       completed,
     }
+
+    ctx.io.emit('todoUpdated', data)
 
     ctx.body = data
   } catch (error) {

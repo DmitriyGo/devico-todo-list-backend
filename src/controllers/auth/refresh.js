@@ -3,8 +3,6 @@ import refreshService from '../../services/auth/refresh'
 
 const refresh = async (ctx) => {
   try {
-    console.log('refreshToken ==>', ctx.cookies.get('refreshToken'))
-
     const refreshToken = ctx.cookies.get('refreshToken')
 
     if (!refreshToken) {

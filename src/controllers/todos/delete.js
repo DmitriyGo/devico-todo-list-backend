@@ -17,6 +17,8 @@ const deleteTodo = async (ctx) => {
       ids.map((id) => Todo.findOneAndDelete({ _id: id, user: userId })),
     )
 
+    ctx.io.emit('listUpdated')
+
     ctx.body = deletedTodos
   } catch (error) {
     ctx.throw(error)
