@@ -10,6 +10,7 @@ import todoRouter from './routes/todo-router.js'
 import authRouter from './routes/auth-router.js'
 import connectToMongo from './helpers/connect.js'
 import { errorHandler } from './middlewares/error-handling.js'
+import socketsMiddleware from './middlewares/sockets.js'
 
 const setupApp = (port) => {
   const app = new koa()
@@ -32,10 +33,7 @@ const setupApp = (port) => {
     }),
   )
 
-  app.use((ctx, next) => {
-    ctx.io = io
-    return next()
-  })
+  app.use(socketsMiddleware(io))
 
   app.use(todoRouter.routes())
   app.use(todoRouter.allowedMethods())

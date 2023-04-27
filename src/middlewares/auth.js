@@ -20,6 +20,10 @@ const authMiddleware = async (ctx, next) => {
       return
     }
 
+    ctx.onSocket('connection', async (socket) => {
+      await socket.join(userData.id)
+    })
+
     ctx.state.user = userData
     await next()
   } catch (e) {

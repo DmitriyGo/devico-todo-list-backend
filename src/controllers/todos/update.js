@@ -34,7 +34,7 @@ const update = async (ctx) => {
       completed,
     }
 
-    ctx.io.emit('todoUpdated', data)
+    ctx.emitSocket(userId, 'todoUpdated', data)
 
     ctx.body = data
   } catch (error) {
