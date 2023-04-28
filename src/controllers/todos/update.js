@@ -34,7 +34,7 @@ const update = async (ctx) => {
       completed,
     }
 
-    ctx.emitSocket(userId, 'todoUpdated', data)
+    ctx.emitSocket({ type: 'todoUpdated', payload: data }, ctx.state.user)
 
     ctx.body = data
   } catch (error) {

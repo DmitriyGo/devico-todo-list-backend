@@ -1,11 +1,7 @@
 const socketsMiddleware = (io) => {
   return async (ctx, next) => {
-    ctx.onSocket = (ev, callback) => {
-      io.on(ev, callback)
-    }
-
-    ctx.emitSocket = (to, ev, args) => {
-      io.to(to).emit(ev, args)
+    ctx.emitSocket = (action, creator) => {
+      io.to(creator.id).emit(action.type, action.payload)
     }
 
     await next()

@@ -19,7 +19,7 @@ const deleteTodo = async (ctx) => {
 
     console.log(ids)
 
-    ctx.emitSocket(userId, 'listUpdated')
+    ctx.emitSocket({ type: 'listUpdated' }, ctx.state.user)
 
     ctx.body = deletedTodos
   } catch (error) {
