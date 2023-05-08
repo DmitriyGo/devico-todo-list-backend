@@ -19,18 +19,16 @@ const login = async (ctx) => {
 
     const userData = await loginService(login, password)
 
+    console.log('userData', userData)
+
     ctx.cookies.set('refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     })
 
     ctx.body = new UserResponseDto(userData)
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const validationErrors = error.errors.map((err) => err.replace(/"/g, ''))
-      ctx.throw(ApiError.ValidationError(validationErrors))
-    } else {
-      ctx.throw(error)
-    }
+    ctx.status = 403
+    ctx.body = error.message
   }
 }
 
